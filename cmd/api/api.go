@@ -17,13 +17,21 @@ type config struct {
 }
 
 // use chi package to routing
-func (app *application) mount() *chi.Mux {
+func (app *application) mount() http.Handler {
 	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+
+	// logger for http request
 	r.Use(middleware.Logger)
+
+	// recover from panic
+	r.Use(middleware.Recoverer)
 	return r
 }
 
-func (app *application) run(mux *http.ServeMux) error {
+func (app *application) run(mux http.Handler) error {
 	srv := &http.Server{
 		Addr:         app.config.addr,
 		Handler:      mux,
