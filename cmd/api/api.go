@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"log"
 	"net/http"
 	"time"
@@ -14,16 +16,14 @@ type config struct {
 	addr string
 }
 
-func (app *application) mount() *http.ServeMux {
-	mux := http.NewServeMux()
-
-	mux.Handler()
-
-	return mux
+// use chi package to routing
+func (app *application) mount() *chi.Mux {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	return r
 }
 
-func (app *application) run() error {
-	mux := http.NewServeMux()
+func (app *application) run(mux *http.ServeMux) error {
 	srv := &http.Server{
 		Addr:         app.config.addr,
 		Handler:      mux,
