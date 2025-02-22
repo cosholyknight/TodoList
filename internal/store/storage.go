@@ -7,15 +7,15 @@ import (
 
 type Storage struct {
 	Tasks interface {
-		Create(ctx context.Context) error
+		Create(ctx context.Context, task *Task) error
 	}
 
 	Lists interface {
-		Create(ctx context.Context) error
+		Create(ctx context.Context, list *List) error
 	}
 }
 
-func NewPostgresStorage(db *sql.DB) Storage {
+func NewStorage(db *sql.DB) Storage {
 	return Storage{
 		Tasks: &TasksStore{db},
 		Lists: &ListsStore{db},
