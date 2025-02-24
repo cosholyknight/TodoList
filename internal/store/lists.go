@@ -33,3 +33,17 @@ func (s *ListsStore) Create(ctx context.Context, list *List) error {
 
 	return nil
 }
+
+func (s *ListsStore) Delete(ctx context.Context, listID int64) error {
+	query := `
+		DELETE
+		FROM lists
+		WHERE id = $1
+`
+	_, err := s.db.ExecContext(ctx, query, listID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
